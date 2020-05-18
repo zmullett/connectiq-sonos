@@ -1,0 +1,6 @@
+<drawables>
+    <bitmap id="LauncherIcon" filename="launcher_icon.png" />
+    <bitmap id="NextTrackIcon" filename="next_track_icon.png" />
+    <bitmap id="PlayIcon" filename="play_icon.png" />
+    <bitmap id="PreviousTrackIcon" filename="previous_track_icon.png" />
+</drawables>

@@ -1,0 +1,5 @@
+<strings>
+<!-- https://integration.sonos.com/ -->
+<string id="SonosIntegrationKey"></string>
+<string id="SonosIntegrationSecret"></string>
+</strings>
