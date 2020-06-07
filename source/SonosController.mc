@@ -123,10 +123,13 @@ class GetHouseholdsHandler {
 
   function onResponse(responseCode, data) {
     var result = [];
-    if (data != null) {
+    if (data.hasKey("households")) {
       var households = data["households"];
       for (var i = 0; i < households.size(); i++) {
-        result.add(households[i]["id"]);
+        var id = households[i]["id"];
+        if (id) {
+          result.add(id);
+        }
       }
     }
     callback_.invoke(!isError(responseCode), result);
@@ -150,13 +153,14 @@ class GetGroupsHandler {
 
   function onResponse(responseCode, data) {
     var result = [];
-    if (data != null) {
+    if (data.hasKey("groups")) {
       var groups = data["groups"];
       for (var i = 0; i < groups.size(); i++) {
-        result.add({
-          :id=>groups[i]["id"],
-          :name=>groups[i]["name"]
-        });
+        var id = groups[i]["id"];
+        var name = groups[i]["name"];
+        if (id && name) {
+          result.add({:id=>id, :name=>name});
+        }
       }
     }
     callback_.invoke(!isError(responseCode), householdId_, result);
@@ -180,7 +184,7 @@ class GetPlaybackStatusHandler {
 
   function onResponse(responseCode, data) {
     var playing = null;
-    if (data != null) {
+    if (data.hasKey("playbackState")) {
       playing = data["playbackState"].equals("PLAYBACK_STATE_PLAYING");
     }
     callback_.invoke(!isError(responseCode), playing);

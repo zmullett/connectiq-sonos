@@ -173,6 +173,9 @@ class RequestHandler {
       makeTokenRefreshRequest();
       return;
     }
+    if (data == null) {
+      data = {};
+    }
     if (callback_ != null) {
       callback_.invoke(responseCode, data);
     }
