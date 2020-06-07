@@ -112,15 +112,14 @@ class SonosGroupViewDelegate extends WatchUi.BehaviorDelegate {
   var playbackStatus_;
   var playbackToggleRequested_;
   var requestInFlight_;
+  var communicationErrorView_;
 
   function initialize(view) {
     BehaviorDelegate.initialize();
     view_ = view;
     selectPressCounter_ = new ButtonPressCounter(
       BUTTON_PRESS_TIMEOUT_MS, method(:onSelectFinalized));
-    playbackStatus_ = null;
-    playbackToggleRequested_ = false;
-    requestInFlight_ = false;
+    resetState();
   }
 
   function getSelectedGroupId() {
@@ -134,8 +133,7 @@ class SonosGroupViewDelegate extends WatchUi.BehaviorDelegate {
         var numPresses = selectPressCounter_.addButtonPress();
         updateModeIcon(numPresses);
         if (numPresses == 1) {
-          playbackStatus_ = null;
-          playbackToggleRequested_ = false;
+          resetState();
           SonosController.getPlaybackStatus(
             groupId, method(:onPlaybackStatus));
         }
@@ -144,7 +142,14 @@ class SonosGroupViewDelegate extends WatchUi.BehaviorDelegate {
     return true;
   }
 
-  function updateModeIcon(pressCount) {
+  private function resetState() {
+    requestInFlight_ = false;
+    playbackStatus_ = null;
+    playbackToggleRequested_ = false;
+    communicationErrorView_ = null;
+  }
+
+  private function updateModeIcon(pressCount) {
     var modeIcon = :none;
     switch (pressCount) {
       case 1:
@@ -219,8 +224,13 @@ class SonosGroupViewDelegate extends WatchUi.BehaviorDelegate {
   }
 
   private function notifyCommunicationError() {
+    if (communicationErrorView_ != null) {
+      // Debounce.
+      return;
+    }
+    communicationErrorView_ = new SonosCommunicationErrorView();
     WatchUi.pushView(
-      new SonosCommunicationErrorView(),
+      communicationErrorView_,
       null,
       WatchUi.SLIDE_RIGHT);
   }
