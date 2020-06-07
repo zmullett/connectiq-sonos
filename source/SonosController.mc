@@ -158,7 +158,7 @@ class GetGroupsHandler {
       for (var i = 0; i < groups.size(); i++) {
         var id = groups[i]["id"];
         var name = groups[i]["name"];
-        if (id && name) {
+        if (id != null && name != null) {
           result.add({:id=>id, :name=>name});
         }
       }
