@@ -112,7 +112,7 @@ class SonosGroupViewDelegate extends WatchUi.BehaviorDelegate {
   var playbackStatus_;
   var playbackToggleRequested_;
   var requestInFlight_;
-  var communicationErrorView_;
+  var errorView_;
 
   function initialize(view) {
     BehaviorDelegate.initialize();
@@ -146,7 +146,7 @@ class SonosGroupViewDelegate extends WatchUi.BehaviorDelegate {
     requestInFlight_ = false;
     playbackStatus_ = null;
     playbackToggleRequested_ = false;
-    communicationErrorView_ = null;
+    errorView_ = null;
   }
 
   private function updateModeIcon(pressCount) {
@@ -224,13 +224,13 @@ class SonosGroupViewDelegate extends WatchUi.BehaviorDelegate {
   }
 
   private function notifyCommunicationError() {
-    if (communicationErrorView_ != null) {
+    if (errorView_ != null) {
       // Debounce.
       return;
     }
-    communicationErrorView_ = new SonosCommunicationErrorView();
+    errorView_ = new SonosMessageView(Rez.Strings.CommunicationError);
     WatchUi.pushView(
-      communicationErrorView_,
+      errorView_,
       null,
       WatchUi.SLIDE_RIGHT);
   }

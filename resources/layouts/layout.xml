@@ -1,78 +1,58 @@
 <resources>
 	<layouts>
 		<layout id="AuthorizeStart">
-		    <text-area
-		    		x="center"
-		    		y="center"
-		    		width="fill"
-		    		height="fill"
-		    		justification="Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER"
-		    		text="@Strings.AuthorizeStart">
-		        <fonts>
-		            <font>Gfx.FONT_MEDIUM</font>
-		            <font>Gfx.FONT_SMALL</font>
-		            <font>Gfx.FONT_TINY</font>
-		        </fonts>
+			<text-area x="center" y="center" width="fill" height="fill"
+				justification="Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER"
+				text="@Strings.AuthorizeStart">
+				<fonts>
+					<font>Gfx.FONT_MEDIUM</font>
+					<font>Gfx.FONT_SMALL</font>
+					<font>Gfx.FONT_TINY</font>
+				</fonts>
 			</text-area>
 		</layout>
 		<layout id="AuthorizeCheckPhone">
-		    <text-area
-		    		x="center"
-		    		y="center"
-		    		width="fill"
-		    		height="fill"
-		    		justification="Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER"
-		    		text="@Strings.AuthorizeCheckPhone">
-		        <fonts>
-		            <font>Gfx.FONT_MEDIUM</font>
-		            <font>Gfx.FONT_SMALL</font>
-		            <font>Gfx.FONT_TINY</font>
-		        </fonts>
+			<text-area x="center" y="center" width="fill" height="fill"
+				justification="Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER"
+				text="@Strings.AuthorizeCheckPhone">
+				<fonts>
+					<font>Gfx.FONT_MEDIUM</font>
+					<font>Gfx.FONT_SMALL</font>
+					<font>Gfx.FONT_TINY</font>
+				</fonts>
 			</text-area>
 		</layout>
 		<layout id="AuthorizeFailed">
-		    <text-area
-		    		x="center"
-		    		y="center"
-		    		width="fill"
-		    		height="fill"
-		    		justification="Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER"
-		    		text="@Strings.AuthorizeFailed">
-		        <fonts>
-		            <font>Gfx.FONT_MEDIUM</font>
-		            <font>Gfx.FONT_SMALL</font>
-		            <font>Gfx.FONT_TINY</font>
-		        </fonts>
+			<text-area x="center" y="center" width="fill" height="fill"
+				justification="Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER"
+				text="@Strings.AuthorizeFailed">
+				<fonts>
+					<font>Gfx.FONT_MEDIUM</font>
+					<font>Gfx.FONT_SMALL</font>
+					<font>Gfx.FONT_TINY</font>
+				</fonts>
 			</text-area>
 		</layout>
 		<layout id="Group">
-		    <text-area
-		    		id="groupName"
-		    		x="center"
-		    		y="center"
-		    		width="fill"
-		    		height="fill"
-		    		justification="Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER">
-		        <fonts>
-		            <font>Gfx.FONT_MEDIUM</font>
-		            <font>Gfx.FONT_SMALL</font>
-		            <font>Gfx.FONT_TINY</font>
-		        </fonts>
+			<text-area id="groupName" x="center" y="center"
+				width="fill" height="fill"
+				justification="Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER">
+				<fonts>
+					<font>Gfx.FONT_MEDIUM</font>
+					<font>Gfx.FONT_SMALL</font>
+					<font>Gfx.FONT_TINY</font>
+				</fonts>
 			</text-area>
 		</layout>
-		<layout id="CommunicationError">
-		    <text-area
-		    		x="center"
-		    		y="center"
-		    		width="fill"
-		    		height="fill"
-		    		justification="Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER"
-		    		text="@Strings.CommunicationError">
-		        <fonts>
-		            <font>Gfx.FONT_MEDIUM</font>
-		            <font>Gfx.FONT_SMALL</font>            
-		            <font>Gfx.FONT_TINY</font>
-		        </fonts>
+		<layout id="Message">
+			<text-area id="message" x="center" y="center" width="fill"
+				height="fill"
+				justification="Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER">
+				<fonts>
+					<font>Gfx.FONT_MEDIUM</font>
+					<font>Gfx.FONT_SMALL</font>
+					<font>Gfx.FONT_TINY</font>
+				</fonts>
 			</text-area>
 		</layout>
 	</layouts>

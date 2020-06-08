@@ -23,7 +23,10 @@ class SonosAuthorizeStartBehaviorDelegate extends WatchUi.BehaviorDelegate {
   }
 
   function onSelect() {
-    WatchUi.switchToView(new SonosAuthorizeCheckPhoneView(), null, WatchUi.SLIDE_LEFT);
+    WatchUi.switchToView(
+      new SonosMessageView(Rez.Strings.AuthorizeCheckPhone),
+      null,
+      WatchUi.SLIDE_LEFT);
     oAuthHandler_.makeOAuthRequest();
     return true;
   }
@@ -31,12 +34,12 @@ class SonosAuthorizeStartBehaviorDelegate extends WatchUi.BehaviorDelegate {
   function onAuthorizationResult(communicationSuccess, authorizationSuccess) {
     if (!communicationSuccess) {
       WatchUi.switchToView(
-        new SonosCommunicationErrorView(),
+        new SonosMessageView(Rez.Strings.CommunicationError),
         new SonosAuthorizeFailedBehaviorDelegate(authorizationSuccessCallback_),
         WatchUi.SLIDE_RIGHT);
     } else if (!authorizationSuccess) {
       WatchUi.switchToView(
-        new SonosAuthorizeFailedView(),
+        new SonosMessageView(Rez.Strings.AuthorizeFailed),
         new SonosAuthorizeFailedBehaviorDelegate(authorizationSuccessCallback_),
         WatchUi.SLIDE_RIGHT);
     } else {
@@ -53,17 +56,6 @@ class SonosAuthorizeCheckPhoneView extends WatchUi.View {
 
   function onLayout(dc) {
     setLayout(Rez.Layouts.AuthorizeCheckPhone(dc));
-  }
-}
-
-class SonosAuthorizeFailedView extends WatchUi.View {
-
-  function initialize() {
-    View.initialize();
-  }
-
-  function onLayout(dc) {
-    setLayout(Rez.Layouts.AuthorizeFailed(dc));
   }
 }
 

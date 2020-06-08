@@ -17,7 +17,7 @@ class SonosGroupMenuBuilderDelegate extends WatchUi.BehaviorDelegate {
 
   private function notifyCommunicationError() {
     WatchUi.switchToView(
-      new SonosCommunicationErrorView(),
+      new SonosMessageView(Rez.Strings.CommunicationError),
       null,
       WatchUi.SLIDE_IMMEDIATE);
   }
