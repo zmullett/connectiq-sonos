@@ -125,7 +125,10 @@ class AuthorizationHandler {
 
   function onAccessResponse(responseCode, data) {
     if(responseCode != 200 || data == null) {
-      callback_.invoke(false);
+      callback_.invoke(
+        /*communicationSuccess=*/true,
+        /*authorizationSuccess=*/false
+      );
       return;
     }
     Storage.setValue(TOKENS_STORAGE_KEY, {
