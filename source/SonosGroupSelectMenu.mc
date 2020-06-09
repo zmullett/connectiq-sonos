@@ -1,6 +1,7 @@
 using Toybox.WatchUi;
 
-class SonosGroupMenuBuilderDelegate extends WatchUi.BehaviorDelegate {
+class SonosGroupSelectMenuBuilderDelegate
+    extends WatchUi.BehaviorDelegate {
   var groups_;
   var numPendingHouseholds_;
   var selectedGroupListener_;
@@ -67,12 +68,12 @@ class SonosGroupMenuBuilderDelegate extends WatchUi.BehaviorDelegate {
       {}));
     WatchUi.switchToView(
       menu,
-      new SonosGroupMenuDelegate(selectedGroupListener_),
+      new SonosGroupSelectMenuDelegate(selectedGroupListener_),
       WatchUi.SLIDE_IMMEDIATE);
   }
 }
 
-class SonosGroupMenuDelegate extends WatchUi.Menu2InputDelegate {
+class SonosGroupSelectMenuDelegate extends WatchUi.Menu2InputDelegate {
   var selectedGroupListener_;
 
   function initialize(selectedGroupListener) {

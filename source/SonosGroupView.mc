@@ -238,7 +238,7 @@ class SonosGroupViewDelegate extends WatchUi.BehaviorDelegate {
   function onMenu() {
     var progressBar = new WatchUi.ProgressBar(
       WatchUi.loadResource(Rez.Strings.Querying), null);
-    var delegate = new SonosGroupMenuBuilderDelegate(
+    var delegate = new SonosGroupSelectMenuBuilderDelegate(
         view_.getSelectedGroupListener());
     WatchUi.pushView(
       progressBar,
