@@ -191,11 +191,11 @@ class SonosGroupViewDelegate extends WatchUi.BehaviorDelegate {
     }
   }
 
-  function onPlaybackStatus(success, playing) {
-    if (!success) {
+  function onPlaybackStatus(error, playing) {
+    if (error != null) {
       view_.setModeIcon(:none);
       selectPressCounter_.cancel();
-      notifyCommunicationError();
+      notifyError(error);
       return;
     }
     playbackStatus_ = playing;
@@ -215,24 +215,24 @@ class SonosGroupViewDelegate extends WatchUi.BehaviorDelegate {
     }
   }
 
-  function onRequestComplete(success) {
+  function onRequestComplete(error) {
     requestInFlight_ = false;
     view_.setModeIcon(:none);
-    if (!success) {
-      notifyCommunicationError();
+    if (error != null) {
+      notifyError(error);
     }
   }
 
-  private function notifyCommunicationError() {
+  private function notifyError(error) {
     if (errorView_ != null) {
       // Debounce.
       return;
     }
-    errorView_ = new SonosMessageView(Rez.Strings.CommunicationError);
+    errorView_ = new SonosMessageView(error[:message]);
     WatchUi.pushView(
       errorView_,
       null,
-      WatchUi.SLIDE_RIGHT);
+      WatchUi.SLIDE_LEFT);
   }
 
   function onMenu() {

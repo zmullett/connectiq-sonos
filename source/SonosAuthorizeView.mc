@@ -36,12 +36,12 @@ class SonosAuthorizeStartBehaviorDelegate extends WatchUi.BehaviorDelegate {
       WatchUi.switchToView(
         new SonosMessageView(Rez.Strings.CommunicationError),
         new SonosAuthorizeFailedBehaviorDelegate(authorizationSuccessCallback_),
-        WatchUi.SLIDE_RIGHT);
+        WatchUi.SLIDE_LEFT);
     } else if (!authorizationSuccess) {
       WatchUi.switchToView(
         new SonosMessageView(Rez.Strings.AuthorizeFailed),
         new SonosAuthorizeFailedBehaviorDelegate(authorizationSuccessCallback_),
-        WatchUi.SLIDE_RIGHT);
+        WatchUi.SLIDE_LEFT);
     } else {
       authorizationSuccessCallback_.invoke();
     }

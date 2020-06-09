@@ -15,16 +15,16 @@ class SonosGroupMenuBuilderDelegate extends WatchUi.BehaviorDelegate {
     SonosController.getHouseholds(method(:onGetHouseholdsResponse));
   }
 
-  private function notifyCommunicationError() {
+  private function notifyError(error) {
     WatchUi.switchToView(
-      new SonosMessageView(Rez.Strings.CommunicationError),
+      new SonosMessageView(error[:message]),
       null,
       WatchUi.SLIDE_IMMEDIATE);
   }
 
-  function onGetHouseholdsResponse(success, householdIds) {
-    if (!success) {
-      notifyCommunicationError();
+  function onGetHouseholdsResponse(error, householdIds) {
+    if (error != null) {
+      notifyError(error);
       return;
     }
     groups_ = [];
@@ -37,9 +37,9 @@ class SonosGroupMenuBuilderDelegate extends WatchUi.BehaviorDelegate {
     }
   }
 
-  function onGetGroupsResponse(success, householdId, groups) {
-    if (!success) {
-      notifyCommunicationError();
+  function onGetGroupsResponse(error, householdId, groups) {
+    if (error != null) {
+      notifyError(error);
       return;
     }
     groups_.addAll(groups);

@@ -44,7 +44,7 @@ class SelectedGroupListener {
 }
 
 /**
- * callback: function(success: boolean, householdIds: string[])
+ * callback: function(error: {}|null, householdIds: string[])
  */
 function getHouseholds(callback) {
   new Internal.GetHouseholdsHandler(callback).makeRequest();
@@ -52,7 +52,7 @@ function getHouseholds(callback) {
 
 /**
  * callback: function(
- *     success: boolean,
+ *     error: {}|null,
  *     householdId: string,
  *     Array<{:id=>string, :name=>string}}>
  * )
@@ -62,42 +62,42 @@ function getGroups(householdId, callback) {
 }
 
 /**
- * callback: function(success: boolean, playing: boolean)
+ * callback: function(error: {}|null, playing: boolean)
  */
 function getPlaybackStatus(groupId, callback) {
   new Internal.GetPlaybackStatusHandler(groupId, callback).makeRequest();
 }
 
 /**
- * callback: function(success: boolean)|null
+ * callback: function(error: {}|null)|null
  */
 function play(groupId, callback) {
-  new Internal.SimpleControlGroupPostHandler(
-    groupId, "/playback/play", callback).makeRequest();
+  new Internal.SimplePlaybackHandler(
+    groupId, "/play", callback).makeRequest();
 }
 
 /**
- * callback: function(success: boolean)|null
+ * callback: function(error: {}|null)|null
  */
 function pause(groupId, callback) {
-  new Internal.SimpleControlGroupPostHandler(
-    groupId, "/playback/pause", callback).makeRequest();
+  new Internal.SimplePlaybackHandler(
+    groupId, "/pause", callback).makeRequest();
 }
 
 /**
- * callback: function(success: boolean)|null
+ * callback: function(error: {}|null)|null
  */
 function skipToNextTrack(groupId, callback) {
-  new Internal.SimpleControlGroupPostHandler(
-    groupId, "/playback/skipToNextTrack", callback).makeRequest();
+  new Internal.SimplePlaybackHandler(
+    groupId, "/skipToNextTrack", callback).makeRequest();
 }
 
 /**
- * callback: function(success: boolean)|null
+ * callback: function(error: {}|null)|null
  */
 function skipToPreviousTrack(groupId, callback) {
-  new Internal.SimpleControlGroupPostHandler(
-    groupId, "/playback/skipToPreviousTrack", callback).makeRequest();
+  new Internal.SimplePlaybackHandler(
+    groupId, "/skipToPreviousTrack", callback).makeRequest();
 }
 
 module Internal {
@@ -106,6 +106,24 @@ const CONTROL_URL = "https://api.ws.sonos.com/control/api/v1";
 
 function isError(responseCode) {
   return responseCode <= 0 || responseCode >= 400;
+}
+
+function getErrorForGeneralMethod(responseCode, data) {
+  if (isError(responseCode)) {
+    return {:message=>Rez.Strings.CommunicationError};
+  }
+  return null;
+}
+
+function getErrorForPlaybackMethod(responseCode, data) {
+  if (responseCode >= 400 && data.hasKey("errorCode")) {
+    // https://developer.sonos.com/reference/control-api/playback/playback-error/
+    switch (data["errorCode"]) {
+      case "ERROR_PLAYBACK_NO_CONTENT":
+        return {:message=>Rez.Strings.NoContentError};
+    }
+  }
+  return getErrorForGeneralMethod(responseCode, data);
 }
 
 class GetHouseholdsHandler {
@@ -132,7 +150,9 @@ class GetHouseholdsHandler {
         }
       }
     }
-    callback_.invoke(!isError(responseCode), result);
+    callback_.invoke(
+      getErrorForGeneralMethod(responseCode, data),
+      result);
   }
 }
 
@@ -163,7 +183,10 @@ class GetGroupsHandler {
         }
       }
     }
-    callback_.invoke(!isError(responseCode), householdId_, result);
+    callback_.invoke(
+      getErrorForGeneralMethod(responseCode, data),
+      householdId_,
+      result);
   }
 }
 
@@ -187,11 +210,13 @@ class GetPlaybackStatusHandler {
     if (data.hasKey("playbackState")) {
       playing = data["playbackState"].equals("PLAYBACK_STATE_PLAYING");
     }
-    callback_.invoke(!isError(responseCode), playing);
+    callback_.invoke(
+      getErrorForGeneralMethod(responseCode, data),
+      playing);
   }
 }
 
-class SimpleControlGroupPostHandler {
+class SimplePlaybackHandler {
   var groupId_;
   var resource_;
   var callback_;
@@ -204,15 +229,13 @@ class SimpleControlGroupPostHandler {
 
   function makeRequest() {
     SonosInterface.makePostRequest(
-      CONTROL_URL + "/groups/" + groupId_ + resource_,
+      CONTROL_URL + "/groups/" + groupId_ + "/playback" + resource_,
       null,
       method(:onResponse));
   }
 
   function onResponse(responseCode, data) {
-    if (callback_) {
-      callback_.invoke(!isError(responseCode));
-    }
+    callback_.invoke(getErrorForPlaybackMethod(responseCode, data));
   }
 }
 

@@ -6,6 +6,7 @@
 	    <string id="AuthorizeStart">Press Select to authorize Sonos</string>
 	    <string id="CommunicationError">Communication error: Check connection and retry</string>
 	    <string id="MenuTitle">Sonos</string>
+	    <string id="NoContentError">No content loaded</string>
 	    <string id="NoGroupSelected">Select speaker group from menu</string>
 	    <string id="Querying">Querying Sonos...</string>
 	    <string id="Unauthorize">Unauthorize</string>
