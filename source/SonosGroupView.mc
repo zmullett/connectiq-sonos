@@ -12,29 +12,22 @@ class SonosGroupView extends WatchUi.View {
       modeIcon_ = :none;
   }
 
-  function onLayout(dc) {
-    setLayout(Rez.Layouts.Group(dc));
-  }
-
   function onSelectedGroupChanged() {
-    maybeUpdateGroupName();
-  }
-
-  function maybeUpdateGroupName() {
-    if (selectedGroupListener_ == null) {
-      // Called before the view is ready.
-      return;
-    }
-    var groupName = selectedGroupListener_.getGroupName();
-    if (groupName == null) {
-      groupName = WatchUi.loadResource(Rez.Strings.NoGroupSelected);
-    }
-    View.findDrawableById("groupName").setText(groupName);
+    self.requestUpdate();
   }
 
   function onUpdate(dc) {
     View.onUpdate(dc);
-    maybeUpdateGroupName();
+    var groupName = selectedGroupListener_.getGroupName();
+    if (groupName == null) {
+      groupName = WatchUi.loadResource(Rez.Strings.NoGroupSelected);
+    }
+    var plan = BetterTextArea.buildPlan(
+      dc,
+      groupName,
+      Graphics.FONT_MEDIUM);
+    dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_BLACK);
+    BetterTextArea.render(dc, plan);
     maybeDrawModeIcon(dc);
   }
 

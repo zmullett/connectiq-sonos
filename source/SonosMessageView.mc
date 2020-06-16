@@ -9,8 +9,13 @@ class SonosMessageView extends WatchUi.View {
       message_ = message;
   }
 
-  function onLayout(dc) {
-    setLayout(Rez.Layouts.Message(dc));
-    findDrawableById("message").setText(message_);
+  function onUpdate(dc) {
+    View.onUpdate(dc);
+    var plan = BetterTextArea.buildPlan(
+      dc,
+      loadResource(message_),
+      Graphics.FONT_MEDIUM);
+    dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_BLACK);
+    BetterTextArea.render(dc, plan);
   }
 }

@@ -1,3 +1,4 @@
+using Toybox.Graphics;
 using Toybox.WatchUi;
 
 class SonosAuthorizeStartView extends WatchUi.View {
@@ -6,8 +7,14 @@ class SonosAuthorizeStartView extends WatchUi.View {
     View.initialize();
   }
 
-  function onLayout(dc) {
-    setLayout(Rez.Layouts.AuthorizeStart(dc));
+  function onUpdate(dc) {
+    View.onUpdate(dc);
+    var plan = BetterTextArea.buildPlan(
+      dc,
+      loadResource(Rez.Strings.AuthorizeStart),
+      Graphics.FONT_MEDIUM);
+    dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_BLACK);
+    BetterTextArea.render(dc, plan);
   }
 }
 
@@ -54,8 +61,14 @@ class SonosAuthorizeCheckPhoneView extends WatchUi.View {
     View.initialize();
   }
 
-  function onLayout(dc) {
-    setLayout(Rez.Layouts.AuthorizeCheckPhone(dc));
+  function onUpdate(dc) {
+    View.onUpdate(dc);
+    var plan = BetterTextArea.buildPlan(
+      dc,
+      loadResource(Rez.Strings.AuthorizeCheckPhone),
+      Graphics.FONT_MEDIUM);
+    dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_BLACK);
+    BetterTextArea.render(dc, plan);
   }
 }
 
