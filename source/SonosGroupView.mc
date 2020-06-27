@@ -190,11 +190,11 @@ class SonosGroupViewDelegate extends WatchUi.BehaviorDelegate {
   }
 
   function onKeyPressed(keyEvent) {
-    if (keyEvent.getKey() != WatchUi.KEY_ENTER) {
-      return false;
+    if (keyEvent.getKey() == WatchUi.KEY_ENTER) {
+      onEnterOrTap();
+      extrasButtonTimer_.start();
     }
-    onEnterOrTap();
-    extrasButtonTimer_.start();
+    return true;
   }
 
   private function onEnterOrTap() {
@@ -208,7 +208,7 @@ class SonosGroupViewDelegate extends WatchUi.BehaviorDelegate {
       if (numPresses == 1) {
         resetState();
         SonosController.getPlaybackStatus(
-          groupId, method(:onPlaybackStatus));
+          groupId, method(:onPlaybackStatusResponse));
       }
     }
   }
@@ -220,8 +220,8 @@ class SonosGroupViewDelegate extends WatchUi.BehaviorDelegate {
     // If the playback state has been retrieved and the select button timer has
     // triggered, but the ENTER key is now being released, then attempt now to
     // toggle playback.
-    maybeTogglePlayback();
     extrasButtonTimer_.reset();
+    maybeTogglePlayback();
     return true;
   }
 
@@ -272,7 +272,7 @@ class SonosGroupViewDelegate extends WatchUi.BehaviorDelegate {
     }
   }
 
-  function onPlaybackStatus(error, playing) {
+  function onPlaybackStatusResponse(error, playing) {
     if (error != null) {
       view_.setModeIcon(:none);
       selectPressCounter_.reset();
