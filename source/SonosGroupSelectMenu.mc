@@ -4,12 +4,10 @@ class SonosGroupSelectMenuBuilderDelegate
     extends WatchUi.BehaviorDelegate {
   var groups_;
   var numPendingHouseholds_;
-  var selectedGroupListener_;
   var onCommunicationError_;
 
-  function initialize(selectedGroupListener) {
+  function initialize() {
     BehaviorDelegate.initialize();
-    selectedGroupListener_ = selectedGroupListener;
   }
 
   function startDiscovery() {
@@ -68,23 +66,21 @@ class SonosGroupSelectMenuBuilderDelegate
       {}));
     WatchUi.switchToView(
       menu,
-      new SonosGroupSelectMenuDelegate(selectedGroupListener_),
+      new SonosGroupSelectMenuDelegate(),
       WatchUi.SLIDE_IMMEDIATE);
   }
 }
 
 class SonosGroupSelectMenuDelegate extends WatchUi.Menu2InputDelegate {
-  var selectedGroupListener_;
 
-  function initialize(selectedGroupListener) {
+  function initialize() {
     Menu2InputDelegate.initialize();
-    selectedGroupListener_ = selectedGroupListener;
   }
 
   function onSelect(item) {
     if (item.getId() == MENU_ITEM_UNAUTHORIZE) {
       SonosInterface.removeAuthorization();
-      selectedGroupListener_.clear();
+      SonosController.SelectedGroup.clear();
       WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
       WatchUi.switchToView(
         new SonosAuthorizeStartView(),
@@ -93,7 +89,7 @@ class SonosGroupSelectMenuDelegate extends WatchUi.Menu2InputDelegate {
         WatchUi.SLIDE_IMMEDIATE);
     } else {
       var group = item.getId();
-      selectedGroupListener_.set(group[:id], group[:name]);
+      SonosController.SelectedGroup.set(group[:id], group[:name]);
       WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
     }
   }

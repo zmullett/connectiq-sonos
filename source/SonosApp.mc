@@ -11,6 +11,7 @@ class SonosApp extends Application.AppBase {
 
   function initialize() {
     AppBase.initialize();
+    SonosController.SelectedGroup.initialize();
   }
 
   function getInitialView() {

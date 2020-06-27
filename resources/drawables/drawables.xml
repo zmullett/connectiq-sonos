@@ -3,4 +3,5 @@
     <bitmap id="NextTrackIcon" filename="next_track_icon.png" />
     <bitmap id="PlayIcon" filename="play_icon.png" />
     <bitmap id="PreviousTrackIcon" filename="previous_track_icon.png" />
+    <bitmap id="VolumeIcon" filename="volume_icon.png" />
 </drawables>

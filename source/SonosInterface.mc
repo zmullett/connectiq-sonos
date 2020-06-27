@@ -21,16 +21,16 @@ function removeAuthorization() {
 /**
  * callback: function(responseCode: int, data: JSON dict)
  */
-function makeRequest(method, url, callback) {
-  new Internal.RequestHandler(method, url, callback).makeRequest();
+function makeRequest(method, url, payload, callback) {
+  new Internal.RequestHandler(method, url, payload, callback).makeRequest();
 }
 
 function makeGetRequest(url, callback) {
-  makeRequest(Communications.HTTP_REQUEST_METHOD_GET, url, callback);
+  makeRequest(Communications.HTTP_REQUEST_METHOD_GET, url, null, callback);
 }
 
 function makePostRequest(url, payload, callback) {
-  makeRequest(Communications.HTTP_REQUEST_METHOD_POST, url, callback);
+  makeRequest(Communications.HTTP_REQUEST_METHOD_POST, url, payload, callback);
 }
 
 function createOAuthHandler(callback) {
@@ -149,18 +149,21 @@ class AuthorizationHandler {
 class RequestHandler {
   var method_;
   var url_;
+  var payload_;
   var callback_;
   var attemptedTokenRefresh_ = false;
 
-  function initialize(method, url, callback) {
+  function initialize(method, url, payload, callback) {
     method_ = method;
     url_ = url;
+    payload_ = payload;
     callback_ = callback;
   }
 
   function makeRequest() {
+    var payload = payload_ == null ? {} : payload_;
     Communications.makeWebRequest(
-      url_, {}, {
+      url_, payload, {
         :method => method_,
         :headers => {
           "Authorization" => Internal.getBearerAuthorizationHeaderValue(),

@@ -6,23 +6,22 @@ const SELECTED_GROUP_STORAGE_FIELD_NAME = "name";
 
 module SonosController {
 
-class SelectedGroupListener {
-  var selectedGroupChangedCallback_;
+module SelectedGroup {
+  var changedCallback;
+  var group;
 
-  function initialize(selectedGroupChangedCallback) {
-    selectedGroupChangedCallback_ = selectedGroupChangedCallback;
+  function initialize() {
+    group = Storage.getValue(SELECTED_GROUP_STORAGE_KEY);
   }
 
-  function getGroupId() {
-    var group = Storage.getValue(SELECTED_GROUP_STORAGE_KEY);
+  function getId() {
     if (group == null) {
       return null;
     }
     return group[SELECTED_GROUP_STORAGE_FIELD_ID];
   }
 
-  function getGroupName() {
-    var group = Storage.getValue(SELECTED_GROUP_STORAGE_KEY);
+  function getName() {
     if (group == null) {
       return null;
     }
@@ -30,16 +29,18 @@ class SelectedGroupListener {
   }
 
   function set(groupId, groupName) {
-    Storage.setValue(SELECTED_GROUP_STORAGE_KEY, {
+    group = {
       SELECTED_GROUP_STORAGE_FIELD_ID=>groupId,
       SELECTED_GROUP_STORAGE_FIELD_NAME=>groupName
-    });
-    selectedGroupChangedCallback_.invoke();
+    };
+    Storage.setValue(SELECTED_GROUP_STORAGE_KEY, group);
+    changedCallback.invoke();
   }
 
   function clear() {
+    group = null;
     Storage.deleteValue(SELECTED_GROUP_STORAGE_KEY);
-    selectedGroupChangedCallback_.invoke();
+    changedCallback.invoke();
   }
 }
 
@@ -98,6 +99,19 @@ function skipToNextTrack(groupId, callback) {
 function skipToPreviousTrack(groupId, callback) {
   new Internal.SimplePlaybackHandler(
     groupId, "/skipToPreviousTrack", callback).makeRequest();
+}
+
+function getVolume(groupId, callback) {
+  new Internal.GetVolumeHandler(groupId, callback).makeRequest();
+}
+
+/**
+ * volumeDelta: [-100, 100]
+ * callback: function(error: {}|null)|null
+ */
+function setRelativeVolume(groupId, volumeDelta, callback) {
+  new Internal.SetRelativeVolumeHandler(
+    groupId, volumeDelta, callback).makeRequest();
 }
 
 module Internal {
@@ -216,6 +230,32 @@ class GetPlaybackStatusHandler {
   }
 }
 
+class GetVolumeHandler {
+  var groupId_;
+  var callback_;
+
+  function initialize(groupId, callback) {
+    groupId_ = groupId;
+    callback_ = callback;
+  }
+
+  function makeRequest() {
+    SonosInterface.makeGetRequest(
+      CONTROL_URL + "/groups/" + groupId_ + "/groupVolume",
+      method(:onResponse));
+  }
+
+  function onResponse(responseCode, data) {
+    var volume = null;
+    if (data.hasKey("volume")) {
+      volume = data["volume"];
+    }
+    callback_.invoke(
+      getErrorForGeneralMethod(responseCode, data),
+      volume);
+  }
+}
+
 class SimplePlaybackHandler {
   var groupId_;
   var resource_;
@@ -236,6 +276,30 @@ class SimplePlaybackHandler {
 
   function onResponse(responseCode, data) {
     callback_.invoke(getErrorForPlaybackMethod(responseCode, data));
+  }
+}
+
+class SetRelativeVolumeHandler {
+  var groupId_;
+  var volumeDelta_;
+  var callback_;
+
+  function initialize(groupId, volumeDelta, callback) {
+    groupId_ = groupId;
+    volumeDelta_ = volumeDelta;
+    callback_ = callback;
+  }
+
+  function makeRequest() {
+    SonosInterface.makePostRequest(
+      CONTROL_URL + "/groups/" + groupId_ + "/groupVolume/relative",
+      {"volumeDelta" => volumeDelta_},
+      method(:onResponse));
+  }
+
+  function onResponse(responseCode, data) {
+    callback_.invoke(
+      getErrorForGeneralMethod(responseCode, data));
   }
 }
 
