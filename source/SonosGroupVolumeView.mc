@@ -1,3 +1,4 @@
+using Toybox.System;
 using Toybox.WatchUi;
 
 class SonosGroupVolumeQueryDelegate
@@ -65,6 +66,7 @@ class SonosGroupVolumeBehaviorDelegate extends WatchUi.BehaviorDelegate {
   var localVolume_;
   var remoteVolume_;
   var requestInFlight_;
+  var screenHeight_;
 
   function initialize(view, volume) {
     BehaviorDelegate.initialize();
@@ -73,6 +75,7 @@ class SonosGroupVolumeBehaviorDelegate extends WatchUi.BehaviorDelegate {
     remoteVolume_ = volume;
     requestInFlight_ = false;
     view_.setVolume(localVolume_);
+    screenHeight_ = System.getDeviceSettings().screenHeight;
   }
 
   function onSwipe(swipeEvent) {
@@ -86,6 +89,19 @@ class SonosGroupVolumeBehaviorDelegate extends WatchUi.BehaviorDelegate {
       default:
         return false;
     }
+  }
+
+  function onTap(clickEvent) {
+    if (clickEvent.getType() == WatchUi.CLICK_TYPE_TAP) {
+      var y = clickEvent.getCoordinates()[1];
+      var ratio = y.toFloat() / screenHeight_;
+      if (ratio >= 0.5) {
+        updateVolume(-1);
+      } else {
+        updateVolume(1);
+      }
+    }
+    return true;
   }
 
   function onKeyPressed(keyEvent) {
