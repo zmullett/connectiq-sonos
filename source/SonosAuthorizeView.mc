@@ -1,4 +1,5 @@
 using Toybox.Graphics;
+using Toybox.Lang;
 using Toybox.WatchUi;
 
 class SonosAuthorizeStartView extends WatchUi.View {
@@ -31,7 +32,8 @@ class SonosAuthorizeStartBehaviorDelegate extends WatchUi.BehaviorDelegate {
 
   function onSelect() {
     WatchUi.switchToView(
-      new SonosMessageView(Rez.Strings.AuthorizeCheckPhone),
+      new SonosMessageView(
+        WatchUi.loadResource(Rez.Strings.AuthorizeCheckPhone)),
       null,
       WatchUi.SLIDE_LEFT);
     oAuthHandler_.makeOAuthRequest();
@@ -41,12 +43,15 @@ class SonosAuthorizeStartBehaviorDelegate extends WatchUi.BehaviorDelegate {
   function onAuthorizationResult(communicationSuccess, authorizationSuccess) {
     if (!communicationSuccess) {
       WatchUi.switchToView(
-        new SonosMessageView(Rez.Strings.CommunicationError),
+        new SonosMessageView(
+          Lang.format(
+            WatchUi.loadResource(Rez.Strings.CommunicationError),
+            ["N/A"])),
         new SonosAuthorizeFailedBehaviorDelegate(authorizationSuccessCallback_),
         WatchUi.SLIDE_LEFT);
     } else if (!authorizationSuccess) {
       WatchUi.switchToView(
-        new SonosMessageView(Rez.Strings.AuthorizeFailed),
+        new SonosMessageView(WatchUi.loadResource(Rez.Strings.AuthorizeFailed)),
         new SonosAuthorizeFailedBehaviorDelegate(authorizationSuccessCallback_),
         WatchUi.SLIDE_LEFT);
     } else {

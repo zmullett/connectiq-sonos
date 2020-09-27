@@ -1,4 +1,6 @@
+using Toybox.Application;
 using Toybox.Application.Storage;
+using Toybox.Lang;
 
 const SELECTED_GROUP_STORAGE_KEY = "group";
 const SELECTED_GROUP_STORAGE_FIELD_ID = "id";
@@ -124,7 +126,11 @@ function isError(responseCode) {
 
 function getErrorForGeneralMethod(responseCode, data) {
   if (isError(responseCode)) {
-    return {:message=>Rez.Strings.CommunicationError};
+    return {
+      :message=>Lang.format(
+        Application.loadResource(Rez.Strings.CommunicationError),
+        [responseCode])
+    };
   }
   return null;
 }
@@ -134,7 +140,9 @@ function getErrorForPlaybackMethod(responseCode, data) {
     // https://developer.sonos.com/reference/control-api/playback/playback-error/
     switch (data["errorCode"]) {
       case "ERROR_PLAYBACK_NO_CONTENT":
-        return {:message=>Rez.Strings.NoContentError};
+        return {
+          :message=>Application.loadResource(Rez.Strings.NoContentError)
+        };
     }
   }
   return getErrorForGeneralMethod(responseCode, data);
