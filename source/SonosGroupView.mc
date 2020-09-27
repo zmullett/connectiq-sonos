@@ -146,6 +146,7 @@ class SonosGroupViewDelegate extends WatchUi.BehaviorDelegate {
   var requestInFlight_;
   var errorView_;
   var extrasButtonTimer_;
+  var enterKeyDown_;
 
   function initialize(view) {
     BehaviorDelegate.initialize();
@@ -157,6 +158,7 @@ class SonosGroupViewDelegate extends WatchUi.BehaviorDelegate {
       BUTTON_HOLD_TIMEOUT_MS,
       method(:onExtrasButtonTimer));
     resetState();
+    enterKeyDown_ = false;
   }
 
   function onHold(clickEvent) {
@@ -191,6 +193,7 @@ class SonosGroupViewDelegate extends WatchUi.BehaviorDelegate {
 
   function onKeyPressed(keyEvent) {
     if (keyEvent.getKey() == WatchUi.KEY_ENTER) {
+      enterKeyDown_ = true;
       onEnterOrTap();
       extrasButtonTimer_.start();
     }
@@ -217,6 +220,7 @@ class SonosGroupViewDelegate extends WatchUi.BehaviorDelegate {
     if (keyEvent.getKey() != WatchUi.KEY_ENTER) {
       return false;
     }
+    enterKeyDown_ = false;
     // If the playback state has been retrieved and the select button timer has
     // triggered, but the ENTER key is now being released, then attempt now to
     // toggle playback.
@@ -284,8 +288,8 @@ class SonosGroupViewDelegate extends WatchUi.BehaviorDelegate {
   }
 
   private function maybeTogglePlayback() {
-    if (selectPressCounter_.getNumPresses() != 1) {
-      return;  // Guards for the onKeyReleased pathway.
+    if (enterKeyDown_) {
+      return;
     }
     if (extrasButtonTimer_.isActive()) {
       // ENTER button is still down. If the user releases it prior to the
