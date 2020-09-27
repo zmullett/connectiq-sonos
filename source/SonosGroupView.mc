@@ -194,8 +194,8 @@ class SonosGroupViewDelegate extends WatchUi.BehaviorDelegate {
   function onKeyPressed(keyEvent) {
     if (keyEvent.getKey() == WatchUi.KEY_ENTER) {
       enterKeyDown_ = true;
-      onEnterOrTap();
       extrasButtonTimer_.start();
+      onEnterOrTap();
     }
     return true;
   }
@@ -280,6 +280,7 @@ class SonosGroupViewDelegate extends WatchUi.BehaviorDelegate {
     if (error != null) {
       view_.setModeIcon(:none);
       selectPressCounter_.reset();
+      extrasButtonTimer_.reset();
       notifyError(error);
       return;
     }
@@ -313,6 +314,7 @@ class SonosGroupViewDelegate extends WatchUi.BehaviorDelegate {
     requestInFlight_ = false;
     view_.setModeIcon(:none);
     if (error != null) {
+      extrasButtonTimer_.reset();
       notifyError(error);
     }
   }
