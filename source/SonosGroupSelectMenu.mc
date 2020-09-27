@@ -53,21 +53,37 @@ class SonosGroupSelectMenuBuilderDelegate
   }
 
   private function presentMenu() {
-    var menu = new WatchUi.Menu2({
-      :title=>WatchUi.loadResource(Rez.Strings.MenuTitle)});
-    for (var i = 0; i < groups_.size(); i++) {
-      menu.addItem(new WatchUi.MenuItem(
-        groups_[i][:name], null, groups_[i], {}));
+    WatchUi.pushView(
+      new SonosGroupSelectMenuView(groups_, method(:onGroupSelectMenuHidden)),
+      new SonosGroupSelectMenuDelegate(),
+      WatchUi.SLIDE_IMMEDIATE);
+  }
+
+  function onGroupSelectMenuHidden() {
+    WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
+  }
+}
+
+class SonosGroupSelectMenuView extends WatchUi.Menu2 {
+  var onHide_;
+
+  function initialize(groups, onHide) {
+    WatchUi.Menu2.initialize(
+      {:title=>WatchUi.loadResource(Rez.Strings.MenuTitle)});
+    for (var i = 0; i < groups.size(); i++) {
+      self.addItem(new WatchUi.MenuItem(
+        groups[i][:name], null, groups[i], {}));
     }
-    menu.addItem(new WatchUi.MenuItem(
+    self.addItem(new WatchUi.MenuItem(
       WatchUi.loadResource(Rez.Strings.Unauthorize),
       null,
       MENU_ITEM_UNAUTHORIZE,
       {}));
-    WatchUi.switchToView(
-      menu,
-      new SonosGroupSelectMenuDelegate(),
-      WatchUi.SLIDE_IMMEDIATE);
+    onHide_ = onHide;
+  }
+
+  function onHide() {
+    onHide_.invoke();
   }
 }
 
