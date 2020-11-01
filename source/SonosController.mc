@@ -65,26 +65,11 @@ function getGroups(householdId, callback) {
 }
 
 /**
- * callback: function(error: {}|null, playing: boolean)
- */
-function getPlaybackStatus(groupId, callback) {
-  new Internal.GetPlaybackStatusHandler(groupId, callback).makeRequest();
-}
-
-/**
  * callback: function(error: {}|null)|null
  */
-function play(groupId, callback) {
+function togglePlayPause(groupId, callback) {
   new Internal.SimplePlaybackHandler(
-    groupId, "/play", callback).makeRequest();
-}
-
-/**
- * callback: function(error: {}|null)|null
- */
-function pause(groupId, callback) {
-  new Internal.SimplePlaybackHandler(
-    groupId, "/pause", callback).makeRequest();
+    groupId, "/togglePlayPause", callback).makeRequest();
 }
 
 /**
@@ -209,32 +194,6 @@ class GetGroupsHandler {
       getErrorForGeneralMethod(responseCode, data),
       householdId_,
       result);
-  }
-}
-
-class GetPlaybackStatusHandler {
-  var groupId_;
-  var callback_;
-
-  function initialize(groupId, callback) {
-    groupId_ = groupId;
-    callback_ = callback;
-  }
-
-  function makeRequest() {
-    SonosInterface.makeGetRequest(
-      CONTROL_URL + "/groups/" + groupId_ + "/playback",
-      method(:onResponse));
-  }
-
-  function onResponse(responseCode, data) {
-    var playing = null;
-    if (data.hasKey("playbackState")) {
-      playing = data["playbackState"].equals("PLAYBACK_STATE_PLAYING");
-    }
-    callback_.invoke(
-      getErrorForGeneralMethod(responseCode, data),
-      playing);
   }
 }
 

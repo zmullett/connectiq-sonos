@@ -101,6 +101,8 @@ class ButtonPressCounter {
   var callback_;
   var buttonTimer_;
   var numPresses_;
+  var buttonReleased_;
+  var timerTriggered_;
 
   /**
    * deadline: int - millseconds before invoking callback with #presses.
@@ -114,22 +116,37 @@ class ButtonPressCounter {
 
   function addButtonPress() {
     numPresses_++;
+    buttonReleased_ = false;
     buttonTimer_.start();
     return numPresses_;
   }
 
+  function setButtonReleased() {
+    buttonReleased_ = true;
+    maybeInvoke();
+  }
+
   function onTimer() {
-    callback_.invoke(numPresses_);
-    reset();
+    timerTriggered_ = true;
+    maybeInvoke();
   }
 
   function reset() {
     buttonTimer_.reset();
     numPresses_ = 0;
+    buttonReleased_ = false;
+    timerTriggered_ = false;
   }
 
   function getNumPresses() {
     return numPresses_;
+  }
+
+  private function maybeInvoke() {
+    if (timerTriggered_ && buttonReleased_) {
+      callback_.invoke(numPresses_);
+      reset();
+    }
   }
 }
 
@@ -142,7 +159,6 @@ class SonosGroupViewDelegate extends WatchUi.BehaviorDelegate {
   var view_;
   var selectPressCounter_;
   var playbackStatus_;
-  var playbackToggleRequested_;
   var requestInFlight_;
   var errorView_;
   var extrasButtonTimer_;
@@ -158,7 +174,6 @@ class SonosGroupViewDelegate extends WatchUi.BehaviorDelegate {
       BUTTON_HOLD_TIMEOUT_MS,
       method(:onExtrasButtonTimer));
     resetState();
-    enterKeyDown_ = false;
   }
 
   function onHold(clickEvent) {
@@ -170,7 +185,7 @@ class SonosGroupViewDelegate extends WatchUi.BehaviorDelegate {
   }
 
   private function showVolumeView() {
-    view_.setModeIcon(:none);
+    resetState();
     var groupId = SonosController.SelectedGroup.getId();
     if (groupId == null) {
       return;
@@ -188,6 +203,7 @@ class SonosGroupViewDelegate extends WatchUi.BehaviorDelegate {
 
   function onTap(clickEvent) {
     onEnterOrTap();
+    selectPressCounter_.setButtonReleased();
     return true;
   }
 
@@ -208,11 +224,6 @@ class SonosGroupViewDelegate extends WatchUi.BehaviorDelegate {
     if (groupId != null) {
       var numPresses = selectPressCounter_.addButtonPress();
       updateModeIcon(numPresses);
-      if (numPresses == 1) {
-        resetState();
-        SonosController.getPlaybackStatus(
-          groupId, method(:onPlaybackStatusResponse));
-      }
     }
   }
 
@@ -221,18 +232,17 @@ class SonosGroupViewDelegate extends WatchUi.BehaviorDelegate {
       return false;
     }
     enterKeyDown_ = false;
-    // If the playback state has been retrieved and the select button timer has
-    // triggered, but the ENTER key is now being released, then attempt now to
-    // toggle playback.
+    selectPressCounter_.setButtonReleased();
     extrasButtonTimer_.reset();
-    maybeTogglePlayback();
     return true;
   }
 
   private function resetState() {
+    view_.setModeIcon(:none);
+    selectPressCounter_.reset();
+    extrasButtonTimer_.reset();
+    enterKeyDown_ = false;
     requestInFlight_ = false;
-    playbackStatus_ = null;
-    playbackToggleRequested_ = false;
     errorView_ = null;
   }
 
@@ -255,9 +265,10 @@ class SonosGroupViewDelegate extends WatchUi.BehaviorDelegate {
   function onSelectFinalized(pressCount) {
     switch (pressCount) {
       case 1:
-      // Toggle playback once playback state has been ascertained.
-      playbackToggleRequested_ = true;
-      maybeTogglePlayback();
+      requestInFlight_ = true;
+      SonosController.togglePlayPause(
+        SonosController.SelectedGroup.getId(),
+        method(:onRequestComplete));
       break;
 
       case 2:
@@ -276,45 +287,9 @@ class SonosGroupViewDelegate extends WatchUi.BehaviorDelegate {
     }
   }
 
-  function onPlaybackStatusResponse(error, playing) {
-    if (error != null) {
-      view_.setModeIcon(:none);
-      selectPressCounter_.reset();
-      extrasButtonTimer_.reset();
-      notifyError(error);
-      return;
-    }
-    playbackStatus_ = playing;
-    maybeTogglePlayback();
-  }
-
-  private function maybeTogglePlayback() {
-    if (enterKeyDown_) {
-      return;
-    }
-    if (extrasButtonTimer_.isActive()) {
-      // ENTER button is still down. If the user releases it prior to the
-      // deadline to show the extras menu, then this method will be
-      // re-evaluated from onKeyReleased().
-      return;
-    }
-    if (playbackStatus_ == null || !playbackToggleRequested_) {
-      return;  // Not ready or not required.
-    }
-    var groupId = SonosController.SelectedGroup.getId();
-    requestInFlight_ = true;
-    if (playbackStatus_) {
-      SonosController.pause(groupId, method(:onRequestComplete));
-    } else {
-      SonosController.play(groupId, method(:onRequestComplete));
-    }
-  }
-
   function onRequestComplete(error) {
-    requestInFlight_ = false;
-    view_.setModeIcon(:none);
+    resetState();
     if (error != null) {
-      extrasButtonTimer_.reset();
       notifyError(error);
     }
   }
