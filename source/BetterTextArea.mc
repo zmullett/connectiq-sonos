@@ -74,19 +74,19 @@ function buildPlan(dc, text, font) {
   var result = [];
   for (var iLine = 0; iLine < lines.size(); iLine++) {
     var indices = lines[iLine][:indices];
-    var text = "";
+    var lineText = "";
     var width = 0;
     for (var iWord = 0; iWord < indices.size(); iWord++) {
       if (iWord > 0) {
-        text += " ";
+        lineText += " ";
         width += fontDimensions[:spaceWidth];
       }
       var word = words[indices[iWord]];
-      text += word[:text];
+      lineText += word[:text];
       width += word[:width];
     }
     result.add({
-      :text => text,
+      :text => lineText,
       :x => (Internal.SCREEN_WIDTH - width) / 2,
       :y => lines[iLine][:y],
     });
