@@ -19,18 +19,22 @@ class SonosApp extends Application.AppBase {
       return [
         new SonosAuthorizeStartView(),
         new SonosAuthorizeStartBehaviorDelegate(
-          method(:onAuthorizationSuccess))
+          new Method(Static, :onAuthorizationSuccess))
       ];
     }
     var groupView = createGroupViewAndDelegate();
     return [groupView[:view], groupView[:delegate]];
   }
+  
+
 }
 
-function onAuthorizationSuccess() {
-  var groupView = createGroupViewAndDelegate();
-  WatchUi.switchToView(
-    groupView[:view],
-    groupView[:delegate],
-    WatchUi.SLIDE_IMMEDIATE);
+module Static {
+  function onAuthorizationSuccess() {
+    var groupView = createGroupViewAndDelegate();
+    WatchUi.switchToView(
+      groupView[:view],
+      groupView[:delegate],
+     WatchUi.SLIDE_IMMEDIATE);
+  }
 }

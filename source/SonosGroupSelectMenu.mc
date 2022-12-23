@@ -53,21 +53,16 @@ class SonosGroupSelectMenuBuilderDelegate
   }
 
   private function presentMenu() {
+  	WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
     WatchUi.pushView(
-      new SonosGroupSelectMenuView(groups_, method(:onGroupSelectMenuHidden)),
+      new SonosGroupSelectMenuView(groups_),
       new SonosGroupSelectMenuDelegate(),
       WatchUi.SLIDE_IMMEDIATE);
-  }
-
-  function onGroupSelectMenuHidden() {
-    WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
   }
 }
 
 class SonosGroupSelectMenuView extends WatchUi.Menu2 {
-  var onHide_;
-
-  function initialize(groups, onHide) {
+  function initialize(groups) {
     WatchUi.Menu2.initialize(
       {:title=>WatchUi.loadResource(Rez.Strings.MenuTitle)});
     for (var i = 0; i < groups.size(); i++) {
@@ -79,11 +74,6 @@ class SonosGroupSelectMenuView extends WatchUi.Menu2 {
       null,
       MENU_ITEM_UNAUTHORIZE,
       {}));
-    onHide_ = onHide;
-  }
-
-  function onHide() {
-    onHide_.invoke();
   }
 }
 
@@ -94,19 +84,19 @@ class SonosGroupSelectMenuDelegate extends WatchUi.Menu2InputDelegate {
   }
 
   function onSelect(item) {
-    if (item.getId() == MENU_ITEM_UNAUTHORIZE) {
+    if (item.getId().equals(MENU_ITEM_UNAUTHORIZE)) {
       SonosInterface.removeAuthorization();
       SonosController.SelectedGroup.clear();
-      WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
+      onDone();
       WatchUi.switchToView(
         new SonosAuthorizeStartView(),
         new SonosAuthorizeStartBehaviorDelegate(
-          method(:onAuthorizationSuccess)),
+          new Method(Static, :onAuthorizationSuccess)),
         WatchUi.SLIDE_IMMEDIATE);
     } else {
       var group = item.getId();
       SonosController.SelectedGroup.set(group[:id], group[:name]);
-      WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
+      onDone();
     }
   }
 }

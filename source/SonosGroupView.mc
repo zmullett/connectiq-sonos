@@ -20,8 +20,12 @@ class SonosGroupView extends WatchUi.View {
 
   function initialize() {
       View.initialize();
-      SonosController.SelectedGroup.changedCallback = method(:requestUpdate);
+      SonosController.SelectedGroup.changedCallback = self.method(:onSelectedGroupChanged);
       modeIcon_ = :none;
+  }
+  
+  function onSelectedGroupChanged() {
+  	requestUpdate();
   }
 
   function onUpdate(dc) {
@@ -178,6 +182,7 @@ class SonosGroupViewDelegate extends WatchUi.BehaviorDelegate {
 
   function onHold(clickEvent) {
     showVolumeView();
+    return true;
   }
 
   function onExtrasButtonTimer() {

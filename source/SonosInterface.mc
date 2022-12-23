@@ -3,6 +3,7 @@ using Toybox.Application.Storage;
 using Toybox.Communications;
 using Toybox.Lang;
 using Toybox.StringUtil;
+using Toybox.System;
 
 module SonosInterface {
 
@@ -74,7 +75,7 @@ class AuthorizationHandler {
   }
 
   function registerForOAuthMessages() {
-    Communications.registerForOAuthMessages(method(:onOAuthMessage));
+    Communications.registerForOAuthMessages(self.method(:onOAuthMessage));
   }
 
   function makeOAuthRequest() {
@@ -94,7 +95,7 @@ class AuthorizationHandler {
     );
   }
 
-  function onOAuthMessage(value) {
+  function onOAuthMessage(value as Communications.OAuthMessage) as Void {
     if(value.data == null) {
       callback_.invoke(
         /*communicationSuccess=*/false,
@@ -119,11 +120,14 @@ class AuthorizationHandler {
         :method => Communications.HTTP_REQUEST_METHOD_POST,
         :headers => {"Authorization" => getBasicAuthorizationHeaderValue()}
       },
-      method(:onAccessResponse)
+      self.method(:onAccessResponse)
     );
   }
 
-  function onAccessResponse(responseCode, data) {
+  function onAccessResponse(
+      responseCode as Lang.Number,
+      data as Lang.Dictionary<Lang.String, Lang.Object?> or Lang.String or Null
+  ) as Void {
     if(responseCode != 200 || data == null) {
       callback_.invoke(
         /*communicationSuccess=*/true,
@@ -170,10 +174,13 @@ class RequestHandler {
           "Content-Type" => Communications.REQUEST_CONTENT_TYPE_JSON,
         },
         :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
-      }, method(:onResponse));
+      }, self.method(:onResponse));
   }
 
-  function onResponse(responseCode, data) {
+  function onResponse(
+      responseCode as Lang.Number,
+      data as Lang.Dictionary<Lang.String, Lang.Object?> or Lang.String or Null
+  ) as Void {
     if (responseCode == 401 && !attemptedTokenRefresh_) {
       attemptedTokenRefresh_ = true;
       makeTokenRefreshRequest();
@@ -196,10 +203,13 @@ class RequestHandler {
         :method => Communications.HTTP_REQUEST_METHOD_POST,
         :headers => {"Authorization" => getBasicAuthorizationHeaderValue()},
         :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
-      }, method(:onTokenRefreshResponse));
+      }, self.method(:onTokenRefreshResponse));
   }
 
-  function onTokenRefreshResponse(responseCode, data) {
+  function onTokenRefreshResponse(
+      responseCode as Lang.Number,
+      data as Lang.Dictionary<Lang.String, Lang.Object?> or Lang.String or Null
+  ) as Void {
     Storage.setValue(TOKENS_STORAGE_KEY, {
       TOKENS_STORAGE_FIELD_ACCESS=>data["access_token"],
       TOKENS_STORAGE_FIELD_REFRESH=>data["refresh_token"]

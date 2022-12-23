@@ -1,6 +1,7 @@
 using Toybox.Graphics;
 using Toybox.Lang;
 using Toybox.WatchUi;
+using Toybox.System;
 
 class SonosAuthorizeStartView extends WatchUi.View {
 
@@ -26,7 +27,7 @@ class SonosAuthorizeStartBehaviorDelegate extends WatchUi.BehaviorDelegate {
   function initialize(authorizationSuccessCallback) {
     BehaviorDelegate.initialize();
     authorizationSuccessCallback_ = authorizationSuccessCallback;
-    oAuthHandler_ = SonosInterface.createOAuthHandler(method(:onAuthorizationResult));
+    oAuthHandler_ = SonosInterface.createOAuthHandler(self.method(:onAuthorizationResult));
     oAuthHandler_.registerForOAuthMessages();
   }
 
