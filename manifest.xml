@@ -16,6 +16,9 @@
             <iq:product id="edge830"/>
             <iq:product id="edgeexplore"/>
             <iq:product id="epix2"/>
+            <iq:product id="epix2pro42mm"/>
+            <iq:product id="epix2pro47mm"/>
+            <iq:product id="epix2pro51mm"/>
             <iq:product id="fenix5"/>
             <iq:product id="fenix5plus"/>
             <iq:product id="fenix5s"/>
@@ -29,7 +32,9 @@
             <iq:product id="fenix6xpro"/>
             <iq:product id="fenix7"/>
             <iq:product id="fenix7s"/>
+            <iq:product id="fenix7spro"/>
             <iq:product id="fenix7x"/>
+            <iq:product id="fenix7xpro"/>
             <iq:product id="fenixchronos"/>
             <iq:product id="fr245"/>
             <iq:product id="fr245m"/>
@@ -37,6 +42,8 @@
             <iq:product id="fr255m"/>
             <iq:product id="fr255s"/>
             <iq:product id="fr255sm"/>
+            <iq:product id="fr265"/>
+            <iq:product id="fr265s"/>
             <iq:product id="fr645"/>
             <iq:product id="fr645m"/>
             <iq:product id="fr745"/>
@@ -64,6 +71,8 @@
             <iq:product id="venu2plus"/>
             <iq:product id="venu2s"/>
             <iq:product id="venusq"/>
+            <iq:product id="venusq2"/>
+            <iq:product id="venusq2m"/>
             <iq:product id="venusqm"/>
             <iq:product id="vivoactive3"/>
             <iq:product id="vivoactive3d"/>
