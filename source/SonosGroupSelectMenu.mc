@@ -67,7 +67,7 @@ class SonosGroupSelectMenuView extends WatchUi.Menu2 {
       {:title=>WatchUi.loadResource(Rez.Strings.MenuTitle)});
     for (var i = 0; i < groups.size(); i++) {
       self.addItem(new WatchUi.MenuItem(
-        groups[i][:name], null, groups[i], {}));
+        groups[i][:name_], null, groups[i], {}));
     }
     self.addItem(new WatchUi.MenuItem(
       WatchUi.loadResource(Rez.Strings.Unauthorize),
@@ -95,7 +95,7 @@ class SonosGroupSelectMenuDelegate extends WatchUi.Menu2InputDelegate {
         WatchUi.SLIDE_IMMEDIATE);
     } else {
       var group = item.getId();
-      SonosController.SelectedGroup.set(group[:id], group[:name]);
+      SonosController.SelectedGroup.set(group[:id], group[:name_]);
       onDone();
     }
   }

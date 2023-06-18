@@ -57,7 +57,7 @@ function getHouseholds(callback) {
  * callback: function(
  *     error: {}|null,
  *     householdId: string,
- *     Array<{:id=>string, :name=>string}}>
+ *     Array<{:id=>string, :name_=>string}}>
  * )
  */
 function getGroups(householdId, callback) {
@@ -186,7 +186,7 @@ class GetGroupsHandler {
         var id = groups[i]["id"];
         var name = groups[i]["name"];
         if (id != null && name != null) {
-          result.add({:id=>id, :name=>name});
+          result.add({:id=>id, :name_=>name});
         }
       }
     }
