@@ -126,7 +126,7 @@ class AuthorizationHandler {
 
   function onAccessResponse(
       responseCode as Lang.Number,
-      data as Lang.Dictionary<Lang.String, Lang.Object?> or Lang.String or Null
+      data as Lang.Dictionary or Lang.String or Null
   ) as Void {
     if(responseCode != 200 || data == null) {
       callback_.invoke(
@@ -179,7 +179,7 @@ class RequestHandler {
 
   function onResponse(
       responseCode as Lang.Number,
-      data as Lang.Dictionary<Lang.String, Lang.Object?> or Lang.String or Null
+      data as Lang.Dictionary or Lang.String or Null
   ) as Void {
     if (responseCode == 401 && !attemptedTokenRefresh_) {
       attemptedTokenRefresh_ = true;
@@ -208,7 +208,7 @@ class RequestHandler {
 
   function onTokenRefreshResponse(
       responseCode as Lang.Number,
-      data as Lang.Dictionary<Lang.String, Lang.Object?> or Lang.String or Null
+      data as Lang.Dictionary or Lang.String or Null
   ) as Void {
     Storage.setValue(TOKENS_STORAGE_KEY, {
       TOKENS_STORAGE_FIELD_ACCESS=>data["access_token"],

@@ -3,7 +3,7 @@
 	    <string id="AppName">Sonos</string>
 	    <string id="AuthorizeCheckPhone">Continue authorization on your phone</string>
 	    <string id="AuthorizeFailed">Authorization failed</string>
-	    <string id="AuthorizeStart">Authorize Sonos: Open Connect app on phone and press Select</string>
+	    <string id="AuthorizeStart">Authorize: Open Connect app on phone then confirm here</string>
 	    <string id="CommunicationError">Communication error (code $1$): Check connection and retry</string>
 	    <string id="MenuTitle">Sonos</string>
 	    <string id="NoContentError">No content loaded</string>
