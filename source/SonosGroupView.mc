@@ -22,6 +22,10 @@ class SonosGroupView extends WatchUi.View {
       View.initialize();
       SonosController.SelectedGroup.changedCallback = self.method(:onSelectedGroupChanged);
       modeIcon_ = :none;
+
+      if (self has :setActionMenuIndicator) {
+        setActionMenuIndicator({:enabled => true});
+      }
   }
   
   function onSelectedGroupChanged() {
@@ -310,6 +314,10 @@ class SonosGroupViewDelegate extends WatchUi.BehaviorDelegate {
       null,
       WatchUi.SLIDE_LEFT);
   }
+
+  function onActionMenu() {
+		return onMenu();
+	}
 
   function onMenu() {
     var progressBar = new WatchUi.ProgressBar(
